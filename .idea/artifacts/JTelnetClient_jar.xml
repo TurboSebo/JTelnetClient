@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JTelnetClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JTelnetClient_jar</output-path>
+    <root id="archive" name="JTelnetClient.jar">
+      <element id="module-output" name="JTelnetClient" />
+    </root>
+  </artifact>
+</component>
