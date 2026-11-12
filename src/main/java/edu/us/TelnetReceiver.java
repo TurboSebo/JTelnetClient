@@ -29,34 +29,16 @@ public class TelnetReceiver implements Runnable {
 
     private void processByte(int value) {
         switch (state) {
-            case DATA -> {
-                if (value == TelnetConstants.IAC) {
-                    state = TelnetState.IAC_RECEIVED;
-                }
-            }
-            case IAC_RECEIVED -> {
-                if (value == TelnetConstants.SB) {
-                    state = TelnetState.SUBNEGOTIATION;
-                } else if (value == TelnetConstants.WILL
-                        || value == TelnetConstants.WONT
-                        || value == TelnetConstants.DO
-                        || value == TelnetConstants.DONT) {
-                    state = TelnetState.NEGOTIATION;
-                } else {
-                    state = TelnetState.DATA;
-                }
-            }
-            case SUBNEGOTIATION -> {
-                if (value == TelnetConstants.IAC) {
-                    state = TelnetState.SUBNEGOTIATION_IAC;
-                }
-            }
-            case SUBNEGOTIATION_IAC -> {
-                state = value == TelnetConstants.SE
-                        ? TelnetState.DATA
-                        : TelnetState.SUBNEGOTIATION;
-            }
-            case NEGOTIATION -> state = TelnetState.DATA;
+            case DATA:
+                System.out.print((char) value);
+                break;
+            case IAC_RECEIVED:
+                System.out.printf("IAC received");
+                break;
+            default:
+                System.out.println("null");
+                break;
         }
     }
+
 }
