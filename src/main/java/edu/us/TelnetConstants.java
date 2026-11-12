@@ -9,5 +9,9 @@ public class TelnetConstants {
     public static final int WONT = 252;
     public static final int DO = 253;
     public static final int DONT = 254;
+    public static final int SB = 250;
+    public static final int SE = 240;
     public static final int IAC = 255;
+    public static final int CR = 13;
+    public static final int LF = 10;
 }

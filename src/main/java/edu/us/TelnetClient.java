@@ -9,7 +9,9 @@ public class TelnetClient {
 
         final int port;
         final String host;
-        public TelnetClient(String host, int port) {
+        private OutputStream out;
+
+    public TelnetClient(String host, int port) {
             this.host = host;
             this.port = port;
         }
@@ -17,8 +19,10 @@ public class TelnetClient {
         try (Socket socket = new Socket(host, port)) {
             System.out.println("ustawianie interfejsów I/O");
             InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
+            out = socket.getOutputStream();
             System.out.println("Łączenie z " + host + ":" + port);
+
+
 
 
         } catch (IOException e) {
