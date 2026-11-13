@@ -34,8 +34,12 @@ public class TelnetClient {
             int b; //byte
             while (((b = System.in.read())!= -1) ){
                 if (b == '\n') {
-                    send(new byte[]{13, 10});
-                } else {
+                    send(new byte[]{TelnetConstants.CR, TelnetConstants.LF});
+                }
+             else if (b == TelnetConstants.IAC) {
+                send(new byte[]{(byte) TelnetConstants.IAC, (byte) TelnetConstants.IAC});
+            }
+                else {
                     send(new byte[]{(byte) b});
                 }
             }

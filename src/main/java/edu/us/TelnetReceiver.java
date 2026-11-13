@@ -23,8 +23,11 @@ public class TelnetReceiver implements Runnable {
             while ((value = inputStream.read()) != -1) {
                 processByte(value);
             }
+            System.out.println("\nPołączenie zamknięte przez serwer.");
+            System.exit(0);
         } catch (IOException e) {
             System.out.println("Błąd odbioru danych: " + e.getMessage());
+            System.exit(-1);
         }
     }
 
@@ -34,7 +37,7 @@ public class TelnetReceiver implements Runnable {
                 if (value == TelnetConstants.IAC) state = TelnetState.IAC_RECEIVED;
                 else
                 {
-                    System.out.print((char) value);
+                    System.out.write((char) value);
                     System.out.flush();
                 }
                 break;
@@ -65,7 +68,7 @@ public class TelnetReceiver implements Runnable {
                         break;
                     default:
                         state = TelnetState.DATA;
-                        System.out.println(value);
+                       // System.out.println(value);
                         break;
                 }
                 break;

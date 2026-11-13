@@ -14,7 +14,9 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         /*
+        System.out.print("Port: ");
         int port = scanner.nextInt();
+        System.out.print("Host: ");
         String host = scanner.next();
         */
         TelnetClient client = new TelnetClient(DEFAULT_HOST, DEFAULT_PORT);
