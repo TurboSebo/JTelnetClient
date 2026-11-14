@@ -13,13 +13,19 @@ public class Main {
         System.out.println("Protokoły Internetowe \n \n");
 
         Scanner scanner = new Scanner(System.in);
-        /*
-        System.out.print("Port: ");
-        int port = scanner.nextInt();
-        System.out.print("Host: ");
-        String host = scanner.next();
-        */
-        TelnetClient client = new TelnetClient(DEFAULT_HOST, DEFAULT_PORT);
+        int port = DEFAULT_PORT;
+        String host = DEFAULT_HOST;
+
+        if (args.length == 0) {
+            System.out.print("Port: ");
+            port = scanner.nextInt();
+            System.out.print("Host: ");
+            host = scanner.next();
+        }else if (args[0].equals("-d") || args[0].equals("--default")) {
+            System.out.println("Connecting to localhost");
+        }
+
+        TelnetClient client = new TelnetClient(host, port);
         client.connect();
 
     }
