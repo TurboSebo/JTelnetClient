@@ -43,18 +43,21 @@ public class TelnetReceiver implements Runnable {
         switch (state) {
             case DATA:
                 if (value == TelnetConstants.IAC) state = TelnetState.IAC_RECEIVED;
+                else if (value == TelnetConstants.CR) {
+                    textBuffer.write(value);
+                    state = TelnetState.CR_RECEIVED;
+                }
                 else
                 {
-                    System.out.write((char) value);
-                    System.out.flush();
+                   textBuffer.write(value);
                 }
                 break;
             case IAC_RECEIVED:
                 switch (value) {
                     case TelnetConstants.IAC:
-                    System.out.print((char) value);
-                    state = TelnetState.DATA;
-                    break;
+                        textBuffer.write(value);
+                        state = TelnetState.DATA;
+                        break;
                     case TelnetConstants.WILL:
                         lastCommand = value;
                         state = TelnetState.NEGOTIATION;
@@ -71,12 +74,29 @@ public class TelnetReceiver implements Runnable {
                         lastCommand = value;
                         state = TelnetState.NEGOTIATION;
                         break;
+                    case TelnetConstants.AYT:
+                        try {
+                            telnetClient.send("Yes\r\n".getBytes(StandardCharsets.UTF_8));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        state = TelnetState.DATA;
+                        break;
+
+                    case TelnetConstants.EC:
+                        removeLastCharacter();
+                        state = TelnetState.DATA;
+                        break;
+                    case TelnetConstants.EL:
+                        textBuffer.reset();
+                        state = TelnetState.DATA;
+                        break;
                     case TelnetConstants.SB:
                         state = TelnetState.SUBNEGOTIATION;
                         break;
                     default:
                         state = TelnetState.DATA;
-                       // System.out.println(value);
+                        // System.out.println(value);
                         break;
                 }
                 break;
@@ -99,6 +119,7 @@ public class TelnetReceiver implements Runnable {
                         case TelnetConstants.DONT:
                             break;
 
+
                     }
                     state = TelnetState.DATA;
                     break;
@@ -113,10 +134,34 @@ public class TelnetReceiver implements Runnable {
                 }
                 else state = TelnetState.SUBNEGOTIATION;
                 break;
+            case CR_RECEIVED:
+                if (value == TelnetConstants.NUL) {
+                    state = TelnetState.DATA;
+                } else if (value == TelnetConstants.IAC) {
+                    state = TelnetState.IAC_RECEIVED;
+                } else if (value == TelnetConstants.CR) {
+                    textBuffer.write(value);
+                } else {
+                    textBuffer.write(value);
+                    state = TelnetState.DATA;
+                }
+                break;
             default:
                 System.out.println("null state");
                 break;
         }
+    }
+
+    private void removeLastCharacter() {
+        String text = textBuffer.toString(StandardCharsets.UTF_8);
+        if (text.isEmpty()) {
+            return;
+        }
+
+        int lastCodePoint = text.offsetByCodePoints(text.length(), -1);
+        byte[] remaining = text.substring(0, lastCodePoint).getBytes(StandardCharsets.UTF_8);
+        textBuffer.reset();
+        textBuffer.writeBytes(remaining);
     }
 
 }

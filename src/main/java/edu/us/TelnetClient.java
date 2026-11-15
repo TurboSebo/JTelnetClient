@@ -1,5 +1,6 @@
 package edu.us;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,15 +33,24 @@ public class TelnetClient {
             tReceiver.setDaemon(true);
             tReceiver.start();
             int b; //byte
+            ByteArrayOutputStream line = new ByteArrayOutputStream();
             while (((b = System.in.read())!= -1) ){
                 if (b == '\n') {
-                    send(new byte[]{TelnetConstants.CR, TelnetConstants.LF});
+                    line.write(TelnetConstants.CR);
+                    line.write(TelnetConstants.LF);
+                    send(line.toByteArray());
+                    line.reset();
                 }
                 else if (b == TelnetConstants.IAC) {
-                    send(new byte[]{(byte) TelnetConstants.IAC, (byte) TelnetConstants.IAC});
-            }
+                    line.write(TelnetConstants.IAC);
+                    line.write(TelnetConstants.IAC);
+                }
+                else if (b == TelnetConstants.CR) {
+                    line.write(TelnetConstants.CR);
+                    line.write(TelnetConstants.NUL);
+                }
                 else {
-                    send(new byte[]{(byte) b});
+                    line.write(b);
                 }
             }
 
