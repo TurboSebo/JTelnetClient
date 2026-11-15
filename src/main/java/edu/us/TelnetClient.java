@@ -36,8 +36,8 @@ public class TelnetClient {
                 if (b == '\n') {
                     send(new byte[]{TelnetConstants.CR, TelnetConstants.LF});
                 }
-             else if (b == TelnetConstants.IAC) {
-                send(new byte[]{(byte) TelnetConstants.IAC, (byte) TelnetConstants.IAC});
+                else if (b == TelnetConstants.IAC) {
+                    send(new byte[]{(byte) TelnetConstants.IAC, (byte) TelnetConstants.IAC});
             }
                 else {
                     send(new byte[]{(byte) b});

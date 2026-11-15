@@ -1,7 +1,9 @@
 package edu.us;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class TelnetReceiver implements Runnable {
 
@@ -9,7 +11,7 @@ public class TelnetReceiver implements Runnable {
     private TelnetState state;
     private final TelnetClient telnetClient;
     private int lastCommand;
-
+    private final ByteArrayOutputStream textBuffer = new ByteArrayOutputStream();
     public TelnetReceiver(InputStream inputStream, TelnetClient telnetClient) {
         this.inputStream = inputStream;
         this.telnetClient = telnetClient;
@@ -22,6 +24,12 @@ public class TelnetReceiver implements Runnable {
             int value;
             while ((value = inputStream.read()) != -1) {
                 processByte(value);
+                if (inputStream.available() == 0 && textBuffer.size() > 0) {
+                    System.out.print(textBuffer.toString(StandardCharsets.UTF_8));
+                    System.out.flush();
+                    textBuffer.reset();
+
+                }
             }
             System.out.println("\nPołączenie zamknięte przez serwer.");
             System.exit(0);
