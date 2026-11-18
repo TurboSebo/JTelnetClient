@@ -6,5 +6,7 @@ public enum TelnetState {
     NEGOTIATION,
     SUBNEGOTIATION,
     SUBNEGOTIATION_IAC,
-    CR_RECEIVED
+    CR_RECEIVED,
+    WILL_RECEIVED,
+    DO_RECEIVED
 }

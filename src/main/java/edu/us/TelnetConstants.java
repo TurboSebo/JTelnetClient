@@ -10,6 +10,10 @@ public class TelnetConstants {
     public static final int DO = 253;
     public static final int DONT = 254;
     public static final int SB = 250;
+    public static final int TERMINAL_TYPE = 24;
+    public static final int TERMINAL_NAWS = 31;
+    public static final int IS = 0;
+    public static final int SEND = 1;
     public static final int NOP = 241;
     public static final int DM = 242;
     public static final int BRK = 243;
